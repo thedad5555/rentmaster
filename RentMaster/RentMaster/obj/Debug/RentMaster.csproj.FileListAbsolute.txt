@@ -11,3 +11,15 @@ c:\users\johnhummel\documents\visual studio 2015\Projects\RentMaster\RentMaster\
 c:\users\johnhummel\documents\visual studio 2015\Projects\RentMaster\RentMaster\bin\Debug\System.Data.SQLite.xml
 C:\Users\johnhummel\Documents\Visual Studio 2015\Projects\RentMaster\RentMaster\obj\Debug\RentMaster.Form1.resources
 C:\Users\johnhummel\Documents\Visual Studio 2015\Projects\RentMaster\RentMaster\obj\Debug\RentMaster.GuestForm.resources
+C:\Users\johnhummel\Documents\GitHub\rentmaster\RentMaster\RentMaster\bin\Debug\RentMaster.exe.config
+C:\Users\johnhummel\Documents\GitHub\rentmaster\RentMaster\RentMaster\obj\Debug\RentMaster.exe
+C:\Users\johnhummel\Documents\GitHub\rentmaster\RentMaster\RentMaster\obj\Debug\RentMaster.pdb
+C:\Users\johnhummel\Documents\GitHub\rentmaster\RentMaster\RentMaster\bin\Debug\RentMaster.exe
+C:\Users\johnhummel\Documents\GitHub\rentmaster\RentMaster\RentMaster\bin\Debug\RentMaster.pdb
+C:\Users\johnhummel\Documents\GitHub\rentmaster\RentMaster\RentMaster\bin\Debug\System.Data.SQLite.pdb
+C:\Users\johnhummel\Documents\GitHub\rentmaster\RentMaster\RentMaster\bin\Debug\System.Data.SQLite.xml
+C:\Users\johnhummel\Documents\GitHub\rentmaster\RentMaster\RentMaster\obj\Debug\RentMaster.csprojResolveAssemblyReference.cache
+C:\Users\johnhummel\Documents\GitHub\rentmaster\RentMaster\RentMaster\obj\Debug\RentMaster.Form1.resources
+C:\Users\johnhummel\Documents\GitHub\rentmaster\RentMaster\RentMaster\obj\Debug\RentMaster.GuestForm.resources
+C:\Users\johnhummel\Documents\GitHub\rentmaster\RentMaster\RentMaster\obj\Debug\RentMaster.Properties.Resources.resources
+C:\Users\johnhummel\Documents\GitHub\rentmaster\RentMaster\RentMaster\obj\Debug\RentMaster.csproj.GenerateResource.Cache

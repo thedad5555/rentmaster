@@ -101,7 +101,7 @@ namespace RentMaster
             //now add in the information
             //open the database
             string sql = "select * from rental;";
-            string sql2;
+            Rental setupRooms;
 
             using (SQLiteConnection c = new SQLiteConnection(rentMasterSqlConnection))
             {
@@ -110,30 +110,21 @@ namespace RentMaster
                 {
                     using (SQLiteDataReader reader = command.ExecuteReader())
                     {
-                        Rental setupRooms = new Rental();
-                        rentalType newRoom = new rentalType();
+                        
                         while (reader.Read())
                         {
+                            setupRooms = new Rental();
                             setupRooms.rental_id = (Int64)reader["rental_id"];
-                            setupRooms.rental_type_id = (Int64)reader["rental_type_id"];
-                            sql2 = "select * from rent_type where rent_type_id='" + setupRooms.rental_type_id + "';";
-                            using (SQLiteCommand command2 = new SQLiteCommand(sql2, c))
-                            {
-                                using (SQLiteDataReader reader2 = command2.ExecuteReader())
-                                {
-                                    newRoom.rent_type_id = setupRooms.rental_type_id;
-                                    reader2.Read();
-                                    newRoom.rent_type_name = (string)reader2["rent_type_name"];
-                                }
-                            }
-
+                            //setupRooms.rental_type_id.rent_type_id = (Int64)reader["rental_type_id"];
+                            setupRooms.rental_type_id.get_rental_type_name((Int64)reader["rental_type_id"], rentMasterSqlConnection);
+                            
                             setupRooms.rental_name = (string)reader["rental_name"];
 
                             if (!reader.IsDBNull(reader.GetOrdinal("guest_id")))
                             {
-                                //MessageBox.Show("The damn guest id is "+(string)reader["guest_id"]+"!");
-                                //setupRooms.guest_id = (Int64)reader["guest_id"];
+                                
                                 setupRooms.rentalGuest.getGuestData((Int64)reader["guest_id"], rentMasterSqlConnection);
+                                
                             }
                             else
                             {
@@ -156,20 +147,9 @@ namespace RentMaster
                                 setupRooms.rental_check_out_time = (DateTime)reader["rental_expiration_time"];
                             }
 
-                            /* just to make sure it all matches
-                            rentalDataTable.Columns.Add("rental_id", typeof(Int64));
-                            rentalDataTable.Columns.Add("rental_type", typeof(Rental));
-                            rentalDataTable.Columns.Add("rental_name", typeof(string));
-                            rentalDataTable.Columns.Add("guest", typeof(Guest));
-                            rentalDataTable.Columns.Add("rental_check_in_time", typeof(DateTime));
-                            rentalDataTable.Columns.Add("rental_expiration_time", typeof(DateTime));
-                            rentalDataTable.Columns.Add("rental_inout", typeof(bool));
-                            rentalDataTable.Columns.Add("rental_notes", typeof(string));
-                            rentalDataTable.Columns.Add("rental_check_out_time", typeof(DateTime));
+                            //MessageBox.Show("Current room: " + setupRooms.rental_name + " and type is " + setupRooms.rental_type_id);
 
-                            */
-
-                            rentalDataTable.Rows.Add(setupRooms.rental_id, newRoom, setupRooms.rental_name, setupRooms.rentalGuest,
+                            rentalDataTable.Rows.Add(setupRooms.rental_id, setupRooms.rental_type_id, setupRooms.rental_name, setupRooms.rentalGuest,
                                                        setupRooms.rental_check_in_time, setupRooms.rental_expiration_time, 
                                                        setupRooms.rental_inout, setupRooms.rental_check_out_time, 
                                                        setupRooms.rental_notes);
@@ -422,17 +402,9 @@ namespace RentMaster
                         while (reader.Read())
                         {
                             setupRooms.rental_id = (Int64)reader["rental_id"];
-                            setupRooms.rental_type_id = (Int64)reader["rental_type_id"];
-                            sql2 = "select * from rent_type where rent_type_id='" + setupRooms.rental_type_id + "';";
-                            using (SQLiteCommand command2 = new SQLiteCommand(sql2, c))
-                            {
-                                using (SQLiteDataReader reader2 = command2.ExecuteReader())
-                                {
-                                    newRoom.rent_type_id = setupRooms.rental_type_id;
-                                    reader2.Read();
-                                    newRoom.rent_type_name = (string)reader2["rent_type_name"];
-                                }
-                            }
+                            setupRooms.rental_type_id.rent_type_id = (Int64)reader["rental_type_id"];
+                            setupRooms.rental_type_id.get_rental_type_name((Int64)reader["rental_type_id"], rentMasterSqlConnection);
+
                             setupRooms.rental_name = (string)reader["rental_name"];
                             if (!reader.IsDBNull(reader.GetOrdinal("guest_id")))
                             {
@@ -460,7 +432,7 @@ namespace RentMaster
                                 setupRooms.rental_check_out_time = (DateTime)reader["rental_expiration_time"];
                             }
 
-                            roomsDataGridView.Rows.Add(setupRooms.rental_id, newRoom, setupRooms.rental_name, setupRooms.rentalGuest,
+                            roomsDataGridView.Rows.Add(setupRooms.rental_id, setupRooms.rental_type_id, setupRooms.rental_name, setupRooms.rentalGuest,
                                                        setupRooms.rental_check_in_time, setupRooms.rental_expiration_time, setupRooms.rental_inout,
                                                        setupRooms.rental_check_out_time, setupRooms.rental_notes);
                         }//while(reader.Read())
@@ -623,11 +595,6 @@ namespace RentMaster
             roomButton.Enabled = true;
             guestButton.Enabled = true;
             
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -963,6 +930,7 @@ namespace RentMaster
             if (showGuests == true)
             {
                 //filter the guests
+                //this one is known to work
                 guestsDataTable.DefaultView.RowFilter = string.Format("guest_first_name LIKE '%{0}%' OR "+
                                                                        "guest_last_name LIKE '%{0}%' OR "+
                                                                       "guest_email LIKE '%{0}%'",
@@ -978,10 +946,28 @@ namespace RentMaster
             if (showRooms == true)
             {
                 //this works.  We need to be able to change things but let's roll with this for now.
-
+                /*
                 rentalDataTable.DefaultView.RowFilter = string.Format("rental_name LIKE '%{0}%'"+
                                                                        " OR Convert([guest], 'System.String') LIKE '%{0}%'"
                                                                        ,filterDataTextBox.Text);
+                */
+                //this will be for the entire row of stuff
+                /*
+                rentalDataTable.Columns.Add("rental_id", typeof(Int64)); N/A
+                rentalDataTable.Columns.Add("rental_type", typeof(rentalType)); DONE 
+                rentalDataTable.Columns.Add("rental_name", typeof(string)); DONE
+                rentalDataTable.Columns.Add("guest", typeof(Guest));  DONE
+                rentalDataTable.Columns.Add("rental_check_in_time", typeof(DateTime));
+                rentalDataTable.Columns.Add("rental_expiration_time", typeof(DateTime));
+                rentalDataTable.Columns.Add("rental_inout", typeof(bool));
+                rentalDataTable.Columns.Add("rental_check_out_time", typeof(DateTime));
+                rentalDataTable.Columns.Add("rental_notes", typeof(string));
+                */
+                rentalDataTable.DefaultView.RowFilter = string.Format("Convert([rental_type], 'System.String') LIKE '%{0}%'" 
+                                                                        + " OR rental_name LIKE '%{0}%'"  
+                                                                        + " OR Convert([guest], 'System.String') LIKE '%{0}%'"
+                                                                        + " OR rental_notes LIKE '%{0}%' "
+                                                                       , filterDataTextBox.Text);
 
 
             }
