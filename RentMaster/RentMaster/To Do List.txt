@@ -1,0 +1,9 @@
+﻿Ability to delete a rental.
+Ability to edit a rental
+Ability to delete a rental type.
+Ability to change a rental type.
+Ability to add a guest.
+Ability to rent a room, and add a new guest in the process.
+
+
+
